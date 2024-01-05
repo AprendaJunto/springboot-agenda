@@ -35,7 +35,7 @@ public class PessoaService {
 
     public CadastraPessoaDTO pegaUnico(UUID id){
         if (!pessoasCadastradasMap.containsKey(id)){
-            throw new PessoaNotFoundException();
+            throw new PessoaNotFoundException("Pessoa com id \"%s\" não encontrada".formatted(id));
         }
         return pessoasCadastradasMap.get(id);
     }
@@ -50,7 +50,7 @@ public class PessoaService {
 
     public void delete(UUID id){
         if (!pessoasCadastradasMap.containsKey(id)){
-            throw new PessoaNotFoundException();
+            throw new PessoaNotFoundException("Pessoa com id \"%s\" não encontrada".formatted(id));
         }
         pessoasCadastradasMap.remove(id);
     }
