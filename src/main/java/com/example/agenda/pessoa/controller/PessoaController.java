@@ -1,7 +1,6 @@
 package com.example.agenda.pessoa.controller;
 
 import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
-import com.example.agenda.pessoa.exception.PessoaNotFoundException;
 import com.example.agenda.pessoa.service.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +45,8 @@ public class PessoaController {
     @GetMapping("/{id}")
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> pegaUnico(@PathVariable("id") UUID id) {
-        try{
-            CadastraPessoaDTO cadastraPessoaDTO = pessoaService.pegaUnico(id);
-            return ResponseEntity.ok(cadastraPessoaDTO);
-        }catch (PessoaNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        CadastraPessoaDTO cadastraPessoaDTO = pessoaService.pegaUnico(id);
+        return ResponseEntity.ok(cadastraPessoaDTO);
     }
 
     //U - Update
@@ -59,24 +54,16 @@ public class PessoaController {
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> atualizar(@PathVariable("id") UUID id,
                                                        @RequestBody @Valid CadastraPessoaDTO cadastroAtualizado) {
-        try{
-            CadastraPessoaDTO registroAtualizaddo = pessoaService.atualiza(id, cadastroAtualizado);
-            return ResponseEntity.ok(registroAtualizaddo);
-        }catch (PessoaNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        CadastraPessoaDTO registroAtualizaddo = pessoaService.atualiza(id, cadastroAtualizado);
+        return ResponseEntity.ok(registroAtualizaddo);
     }
 
     // D - Delete
     @DeleteMapping("/{id}")
-    @CrossOrigin
+    @CrossOrigin("*")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        try{
-            pessoaService.delete(id);
-            return ResponseEntity.noContent().build();
-        }catch (PessoaNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        pessoaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
