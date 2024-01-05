@@ -1,59 +1,57 @@
 package com.example.agenda.pessoa.controller;
 
 import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
+import com.example.agenda.pessoa.exception.PessoaNotFoundException;
+import com.example.agenda.pessoa.service.PessoaService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pessoas")
 public class PessoaController {
 
-    private final Map<UUID, CadastraPessoaDTO> pessoasCadastradasMap = new HashMap<>();
+    private final PessoaService pessoaService; //Dependemos de pessoaService
 
-    public PessoaController() {
-        for (int i = 0; i < 10; i++) {
-            CadastraPessoaDTO pessoaDTO = new CadastraPessoaDTO();
-            pessoaDTO.setNome("Nome " + i);
-            pessoaDTO.setIdade(18 + i);
-            pessoaDTO.setTelefone(String.valueOf(i));
-
-            pessoasCadastradasMap.put(pessoaDTO.getId(), pessoaDTO);
-        }
+    @Autowired
+    public PessoaController(PessoaService pessoaService) {
+        this.pessoaService = pessoaService;
     }
+
 
     //create
     @PostMapping
     @CrossOrigin("*")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void cadastraPessoa(@RequestBody @Valid CadastraPessoaDTO cadastraPessoaDTO) {
-        System.out.println("ID:" + cadastraPessoaDTO.getId());
-        System.out.println("Nome: " + cadastraPessoaDTO.getNome());
-        System.out.println("Idade: " + cadastraPessoaDTO.getIdade());
-        System.out.println("Telefone: " + cadastraPessoaDTO.getTelefone());
-
-        pessoasCadastradasMap.put(cadastraPessoaDTO.getId(), cadastraPessoaDTO);
-
+        pessoaService.cadastra(cadastraPessoaDTO);
     }
 
     //read
     @GetMapping
     @CrossOrigin("*")
     public ResponseEntity<List<CadastraPessoaDTO>> listaPessoas() {
-        return ResponseEntity.ok(new ArrayList<>(pessoasCadastradasMap.values()));
+        Map<UUID, CadastraPessoaDTO> pessoasCadadstradas = pessoaService.pegaTodos();
+        return ResponseEntity.ok(new ArrayList<>(pessoasCadadstradas.values()));
     }
 
     //read de um unico elemento por ID
     @GetMapping("/{id}")
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> pegaUnico(@PathVariable("id") UUID id) {
-        if (pessoasCadastradasMap.containsKey(id)) {
-            return ResponseEntity.ok(pessoasCadastradasMap.get(id));
+        try{
+            CadastraPessoaDTO cadastraPessoaDTO = pessoaService.pegaUnico(id);
+            return ResponseEntity.ok(cadastraPessoaDTO);
+        }catch (PessoaNotFoundException e){
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
     //U - Update
@@ -61,26 +59,24 @@ public class PessoaController {
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> atualizar(@PathVariable("id") UUID id,
                                                        @RequestBody @Valid CadastraPessoaDTO cadastroAtualizado) {
-        if (!pessoasCadastradasMap.containsKey(id)) {
+        try{
+            CadastraPessoaDTO registroAtualizaddo = pessoaService.atualiza(id, cadastroAtualizado);
+            return ResponseEntity.ok(registroAtualizaddo);
+        }catch (PessoaNotFoundException e){
             return ResponseEntity.notFound().build();
         }
-
-        CadastraPessoaDTO pessoaDTO = pessoasCadastradasMap.get(id);
-        pessoaDTO.atualiza(cadastroAtualizado);
-
-        return ResponseEntity.ok(pessoaDTO);
     }
 
     // D - Delete
     @DeleteMapping("/{id}")
     @CrossOrigin
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        if (!pessoasCadastradasMap.containsKey(id)) {
+        try{
+            pessoaService.delete(id);
+            return ResponseEntity.noContent().build();
+        }catch (PessoaNotFoundException e){
             return ResponseEntity.notFound().build();
         }
-
-        pessoasCadastradasMap.remove(id);
-        return ResponseEntity.noContent().build();
     }
 
 }
