@@ -1,7 +1,7 @@
 package com.example.agenda.pessoa.service;
 
-import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
 import com.example.agenda.pessoa.exception.PessoaNotFoundException;
+import com.example.agenda.pessoa.model.Pessoa;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,38 +12,34 @@ import java.util.UUID;
 @Service
 public class PessoaService {
 
-    private final Map<UUID, CadastraPessoaDTO> pessoasCadastradasMap = new HashMap<>();
+    private final Map<UUID, Pessoa> pessoasCadastradasMap = new HashMap<>();
 
     public PessoaService() {
         for (int i = 0; i < 10; i++) {
-            CadastraPessoaDTO pessoaDTO = new CadastraPessoaDTO();
-            pessoaDTO.setNome("Nome " + i);
-            pessoaDTO.setIdade(18 + i);
-            pessoaDTO.setTelefone(String.valueOf(i));
-
+            Pessoa pessoaDTO = new Pessoa(null, "Nome " + i, 18 + i, String.valueOf(i));
             pessoasCadastradasMap.put(pessoaDTO.getId(), pessoaDTO);
         }
     }
 
-    public void cadastra(CadastraPessoaDTO cadastraPessoaDTO){
-        pessoasCadastradasMap.put(cadastraPessoaDTO.getId(), cadastraPessoaDTO);
+    public void cadastra(Pessoa pessoa){
+        pessoasCadastradasMap.put(pessoa.getId(), pessoa);
     }
 
-    public Map<UUID, CadastraPessoaDTO> pegaTodos(){
+    public Map<UUID, Pessoa> pegaTodos(){
         return pessoasCadastradasMap;
     }
 
-    public CadastraPessoaDTO pegaUnico(UUID id){
+    public Pessoa pegaUnico(UUID id){
         if (!pessoasCadastradasMap.containsKey(id)){
             throw new PessoaNotFoundException("Pessoa com id \"%s\" não encontrada".formatted(id));
         }
         return pessoasCadastradasMap.get(id);
     }
 
-    public CadastraPessoaDTO atualiza(UUID id, CadastraPessoaDTO cadastroAtualizado){
-        CadastraPessoaDTO registro = pegaUnico(id);
+    public Pessoa atualiza(UUID id, Pessoa pessoaAtualizada){
+        Pessoa registro = pegaUnico(id);
 
-        registro.atualiza(cadastroAtualizado);
+        registro.atualiza(pessoaAtualizada);
 
         return registro;
     }
