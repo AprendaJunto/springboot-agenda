@@ -1,6 +1,7 @@
 package com.example.agenda.pessoa.controller;
 
 import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
+import com.example.agenda.pessoa.model.Pessoa;
 import com.example.agenda.pessoa.service.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,23 +30,30 @@ public class PessoaController {
     @CrossOrigin("*")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void cadastraPessoa(@RequestBody @Valid CadastraPessoaDTO cadastraPessoaDTO) {
-        pessoaService.cadastra(cadastraPessoaDTO);
+        pessoaService.cadastra(cadastraPessoaDTO.toPessoa());
     }
 
     //read
     @GetMapping
     @CrossOrigin("*")
     public ResponseEntity<List<CadastraPessoaDTO>> listaPessoas() {
-        Map<UUID, CadastraPessoaDTO> pessoasCadadstradas = pessoaService.pegaTodos();
-        return ResponseEntity.ok(new ArrayList<>(pessoasCadadstradas.values()));
+        Map<UUID, Pessoa> pessoasCadadstradas = pessoaService.pegaTodos();
+
+        List<CadastraPessoaDTO> listaPessoas = pessoasCadadstradas.values()
+                .stream()
+                .map(CadastraPessoaDTO::fromPessoa)
+                .toList();
+
+        return ResponseEntity.ok(listaPessoas);
     }
 
     //read de um unico elemento por ID
     @GetMapping("/{id}")
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> pegaUnico(@PathVariable("id") UUID id) {
-        CadastraPessoaDTO cadastraPessoaDTO = pessoaService.pegaUnico(id);
-        return ResponseEntity.ok(cadastraPessoaDTO);
+        Pessoa pessoa = pessoaService.pegaUnico(id);
+        CadastraPessoaDTO body = CadastraPessoaDTO.fromPessoa(pessoa);
+        return ResponseEntity.ok(body);
     }
 
     //U - Update
@@ -54,8 +61,9 @@ public class PessoaController {
     @CrossOrigin("*")
     public ResponseEntity<CadastraPessoaDTO> atualizar(@PathVariable("id") UUID id,
                                                        @RequestBody @Valid CadastraPessoaDTO cadastroAtualizado) {
-        CadastraPessoaDTO registroAtualizaddo = pessoaService.atualiza(id, cadastroAtualizado);
-        return ResponseEntity.ok(registroAtualizaddo);
+        Pessoa registroAtualizado = pessoaService.atualiza(id, cadastroAtualizado.toPessoa());
+        CadastraPessoaDTO body = CadastraPessoaDTO.fromPessoa(registroAtualizado);
+        return ResponseEntity.ok(body);
     }
 
     // D - Delete

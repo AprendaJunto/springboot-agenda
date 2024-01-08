@@ -1,5 +1,6 @@
 package com.example.agenda.pessoa.controller.dto;
 
+import com.example.agenda.pessoa.model.Pessoa;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,16 @@ public class CadastraPessoaDTO {
 
     @NotBlank(message = "Telefone não pode ficar em branco")
     private String telefone;
+
+    public CadastraPessoaDTO() {
+    }
+
+    public CadastraPessoaDTO(UUID id, String nome, Integer idade, String telefone) {
+        this.id = id;
+        this.nome = nome;
+        this.idade = idade;
+        this.telefone = telefone;
+    }
 
     public UUID getId() {
         return id;
@@ -48,9 +59,21 @@ public class CadastraPessoaDTO {
         this.telefone = telefone;
     }
 
-    public void atualiza(CadastraPessoaDTO cadastroAtualizado) {
-        this.nome = cadastroAtualizado.getNome();
-        this.idade = cadastroAtualizado.getIdade();
-        this.telefone = cadastroAtualizado.getTelefone();
+    public Pessoa toPessoa() {
+        return new Pessoa(
+                this.id,
+                this.nome,
+                this.idade,
+                this.telefone
+        );
+    }
+
+    public static CadastraPessoaDTO fromPessoa(Pessoa pessoa) {
+        return new CadastraPessoaDTO(
+                pessoa.getId(),
+                pessoa.getNome(),
+                pessoa.getIdade(),
+                pessoa.getTelefone()
+        );
     }
 }
