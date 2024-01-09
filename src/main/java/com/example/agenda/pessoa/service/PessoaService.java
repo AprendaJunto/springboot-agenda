@@ -1,39 +1,36 @@
 package com.example.agenda.pessoa.service;
 
+import com.example.agenda.pessoa.entity.Pessoa;
 import com.example.agenda.pessoa.exception.PessoaNotFoundException;
-import com.example.agenda.pessoa.model.Pessoa;
+import com.example.agenda.pessoa.repository.PessoaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 
 @Service
 public class PessoaService {
 
-    private final Map<UUID, Pessoa> pessoasCadastradasMap = new HashMap<>();
+    private final PessoaRepository pessoaRepository;
 
-    public PessoaService() {
-        for (int i = 0; i < 10; i++) {
-            Pessoa pessoaDTO = new Pessoa(null, "Nome " + i, 18 + i, String.valueOf(i));
-            pessoasCadastradasMap.put(pessoaDTO.getId(), pessoaDTO);
-        }
+    @Autowired
+    public PessoaService(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
     }
 
     public void cadastra(Pessoa pessoa){
-        pessoasCadastradasMap.put(pessoa.getId(), pessoa);
+        pessoaRepository.save(pessoa);
     }
 
-    public Map<UUID, Pessoa> pegaTodos(){
-        return pessoasCadastradasMap;
+    public List<Pessoa> pegaTodos(){
+        return pessoaRepository.findAll();
     }
 
     public Pessoa pegaUnico(UUID id){
-        if (!pessoasCadastradasMap.containsKey(id)){
-            throw new PessoaNotFoundException("Pessoa com id \"%s\" não encontrada".formatted(id));
-        }
-        return pessoasCadastradasMap.get(id);
+        return pessoaRepository.findById(id)
+                .orElseThrow(() -> new PessoaNotFoundException(id));
     }
 
     public Pessoa atualiza(UUID id, Pessoa pessoaAtualizada){
@@ -41,14 +38,14 @@ public class PessoaService {
 
         registro.atualiza(pessoaAtualizada);
 
-        return registro;
+        return pessoaRepository.save(registro);
     }
 
     public void delete(UUID id){
-        if (!pessoasCadastradasMap.containsKey(id)){
-            throw new PessoaNotFoundException("Pessoa com id \"%s\" não encontrada".formatted(id));
+        if (!pessoaRepository.existsById(id)){
+           throw new PessoaNotFoundException(id);
         }
-        pessoasCadastradasMap.remove(id);
+        pessoaRepository.deleteById(id);
     }
 
 
