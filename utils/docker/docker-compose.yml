@@ -1,0 +1,15 @@
+# Use root/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: no
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: db_agenda
+    ports:
+      - "5432:5432"
+

@@ -1,7 +1,7 @@
 package com.example.agenda.pessoa.controller;
 
 import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
-import com.example.agenda.pessoa.model.Pessoa;
+import com.example.agenda.pessoa.entity.Pessoa;
 import com.example.agenda.pessoa.service.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -37,9 +36,9 @@ public class PessoaController {
     @GetMapping
     @CrossOrigin("*")
     public ResponseEntity<List<CadastraPessoaDTO>> listaPessoas() {
-        Map<UUID, Pessoa> pessoasCadadstradas = pessoaService.pegaTodos();
+        List<Pessoa> pessoas = pessoaService.pegaTodos();
 
-        List<CadastraPessoaDTO> listaPessoas = pessoasCadadstradas.values()
+        List<CadastraPessoaDTO> listaPessoas = pessoas
                 .stream()
                 .map(CadastraPessoaDTO::fromPessoa)
                 .toList();

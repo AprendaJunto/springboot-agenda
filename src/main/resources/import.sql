@@ -1,0 +1,10 @@
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('5dd2ca6a-73c5-4dc4-be57-ed7cc37ca833'::uuid, 18, 'Nome 0', '0');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('c981625d-b2a6-4991-9f56-5bf576d2c4a5'::uuid, 19, 'Nome 1', '1');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('4a062e42-e6f5-4c66-b283-25c3e6030ce5'::uuid, 20, 'Nome 2', '2');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('101fba4b-8943-4153-a1b0-474ec00de977'::uuid, 21, 'Nome 3', '3');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('3c18d851-e15e-41d7-885b-e1a790ef89aa'::uuid, 22, 'Nome 4', '4');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('7fc603d9-3e77-4ea1-9d4e-9370d07419b4'::uuid, 23, 'Nome 5', '5');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('1552092b-f31f-4323-b398-083a7f376e86'::uuid, 24, 'Nome 6', '6');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('d02a2c6e-0619-4491-8a16-806f758f6d4e'::uuid, 25, 'Nome 7', '7');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('dab7166a-771e-4346-8e7e-ad1a75bd7158'::uuid, 26, 'Nome 8', '8');
+INSERT INTO pessoas (id, idade, nome, telefone) VALUES('bd7bfd6b-36ea-4c01-86e4-b9f63f52e1b8'::uuid, 27, 'Nome 9', '9');

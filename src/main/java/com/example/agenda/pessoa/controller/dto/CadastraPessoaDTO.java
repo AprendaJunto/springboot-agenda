@@ -1,6 +1,6 @@
 package com.example.agenda.pessoa.controller.dto;
 
-import com.example.agenda.pessoa.model.Pessoa;
+import com.example.agenda.pessoa.entity.Pessoa;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
