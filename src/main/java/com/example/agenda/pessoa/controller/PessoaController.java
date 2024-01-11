@@ -1,6 +1,7 @@
 package com.example.agenda.pessoa.controller;
 
 import com.example.agenda.pessoa.controller.dto.CadastraPessoaDTO;
+import com.example.agenda.pessoa.controller.dto.CadastroTelefoneDTO;
 import com.example.agenda.pessoa.entity.Pessoa;
 import com.example.agenda.pessoa.service.PessoaService;
 import jakarta.validation.Valid;
@@ -72,5 +73,16 @@ public class PessoaController {
         pessoaService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/telefones")
+    @CrossOrigin("*")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void cadastraTelefone(@PathVariable("id") UUID id,
+                                 @RequestBody @Valid CadastroTelefoneDTO cadastroTelefoneDTO){
+        pessoaService.cadastraTelefone(id, cadastroTelefoneDTO.getNumero(), cadastroTelefoneDTO.getTipoTelefone());
+
+    }
+
+
 
 }

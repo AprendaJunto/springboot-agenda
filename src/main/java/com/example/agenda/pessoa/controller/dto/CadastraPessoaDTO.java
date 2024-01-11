@@ -73,7 +73,7 @@ public class CadastraPessoaDTO {
                 pessoa.getId(),
                 pessoa.getNome(),
                 pessoa.getIdade(),
-                pessoa.getTelefone()
+                pessoa.getTelefones().get(0).getNumero()
         );
     }
 }
